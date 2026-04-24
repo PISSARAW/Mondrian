@@ -1,3 +1,4 @@
+open Graphics;;
 
 type label = { coord : int; colored : bool; };;
 type bsp = R of color option | L of label * bsp * bsp;;
@@ -27,35 +28,35 @@ let ajout_Bsp noeud x a =
 	   if c.coord = x then a
 	   else if x<c.coord then match l with
 	    |R _ -> a
-	    |L(,,_) -> L(c, aux x l (parite+1), r)
+	    |L(_,_,_) -> L(c, aux x l (parite+1), r)
 	   else match r with
 	    |R _ -> a
-	    |L(,,_) -> L(c, l, aux x r (parite+1))
+	    |L(_,_,_) -> L(c, l, aux x r (parite+1))
 	 else match l,r with
-	   |R ,R _|L(,_,_),L(,,_) ->
+	   |R _,R _|L(_,_,_),L(_,_,_) ->
 	     if (leftorright()) = 0 then 
 	       L(c, aux x l (parite+1), r)
 	     else
 	       L(c, l, aux x r (parite+1))
-	   |R ,L(,_,_) -> L(c, aux x l (parite+1), r)
-	   |L(,,_),R _ -> L(c, l, aux x r (parite+1))
+	   |R _,L(_,_,_) -> L(c, aux x l (parite+1), r)
+	   |L(_,_,_),R _ -> L(c, l, aux x r (parite+1))
       else
 	if (parite mod 2) <> 0 then	   
 	   if c.coord = x then a
 	   else if x<c.coord then match l with
 	    |R _ -> a
-	    |L(,,_) -> L(c, aux x l (parite+1), r)
+	    |L(_,_,_) -> L(c, aux x l (parite+1), r)
 	   else match r with
 	    |R _ -> a
-	    |L(,,_) -> L(c, l, aux x r (parite+1)) 
+	    |L(_,_,_) -> L(c, l, aux x r (parite+1)) 
 	else match l,r with
-	   |R ,R _|L(,_,_),L(,,_) ->
+	   |R _,R _|L(_,_,_),L(_,_,_) ->
 	     if (leftorright()) = 0 then 
 	       L(c, aux x l (parite+1), r)
 	     else
 	       L(c, l, aux x r (parite+1))
-	   |R ,L(,_,_) -> L(c, aux x l (parite+1), r)
-	   |L(,,_),R _ -> L(c, l, aux x r (parite+1))	      				  
+	   |R _,L(_,_,_) -> L(c, aux x l (parite+1), r)
+	   |L(_,_,_),R _ -> L(c, l, aux x r (parite+1))	      				  
   in aux x a 0
 ;;
 
@@ -76,10 +77,10 @@ let cons_Bsp iter =
 
 
 
-let rectangle x t w h l = 
-	let (a,b) = Graphics.currentt_point() and x1=x+w and y1 = y+h in
+let rectangle x y w h l = 
+	let (a,b) = Graphics.current_point() and x1=x+w and y1 = y+h in
 		Graphics.moveto x y;
-		Grpahics.lineto x y1; Graphics.lineto x1 y1;
+		Graphics.lineto x y1; Graphics.lineto x1 y1;
 		Graphics.lineto x1 y ; Graphics.lineto x y;
 		Graphics.moveto a b;
 		(a,b, x1, y1)::l;;
@@ -88,13 +89,6 @@ let rectangle x t w h l =
 type rect =  int * int * int * int * bsp;;
 
 type ligne = int * int *int * int;;
-
-Graphics.lineto 100 100;;
-
-let getLine = 
-	let (a,b) = Graphics.current_point() in 
-		let aux = 
-			
 
 (* Dessiner un rectangle *)
 let rectangle1 x0 y0 w h l = 
@@ -108,22 +102,13 @@ let rectangle1 x0 y0 w h l =
 
 (* Ajouter un label *)
 let lab b = match b with
-    | R(a) -> { coord =0; colored= false; }
-    | L(l,g,d) -> l;;
+    | R(_) -> { coord =0; colored= false; }
+    | L(l,_,_) -> l;;
 
 
 
 let n a = {coord=a; colored=false};;
 let rn a = a.coord;;
 let bspn = function
-	| R(b)-> 0
-	| L(l, g,d) -> rn l;;
-			
-ajout (n 1) (R None) ;;
-(* diese initial necessaire *)
-
-(* diese initial necessaire *)
-
-(* diese initial necessaire *)
-
-(* diese initial necessaire *) 
+	| R(_)-> 0
+	| L(l,_,_) -> rn l;;
